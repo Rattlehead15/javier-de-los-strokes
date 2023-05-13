@@ -1,5 +1,6 @@
 CC=gcc
-CFLAGS=-std=c11 -Wall -Wextra -Wno-unused-parameter
+CFLAGS=-O3 -ffast-math -ftree-vectorize -fopt-info-vec -std=c11 -Wall -Wextra -Wno-unused-parameter
+#CFLAGS=-O3 -ffast-math -Rpass=loop-vectorize -Rpass-analysis=loop-vectorize  # clang
 LDFLAGS=
 
 TARGETS=demo headless
