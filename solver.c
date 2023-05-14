@@ -2,6 +2,7 @@
 
 #include "solver.h"
 
+// ANTES: #define IX(i, j) ((i) + (n + 2) * (j))
 #define IX(i, j) ((i) + (n + 2) * (j))
 #define SWAP(x0, x)      \
     {                    \
@@ -9,6 +10,8 @@
         x0 = x;          \
         x = tmp;         \
     }
+
+#define THRESHOLD 0.0001
 
 typedef enum { NONE = 0,
                VERTICAL = 1,
@@ -38,7 +41,7 @@ static void set_bnd(unsigned int n, boundary b, float* x)
 
 static void lin_solve(unsigned int n, boundary b, float* x, const float* x0, float a, float c)
 {
-    for (unsigned int k = 0; k < 20; k++) {
+    for (unsigned k = 0; k < 20; k++) {
         for (unsigned int i = 1; i <= n; i++) {
             for (unsigned int j = 1; j <= n; j++) {
                 x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) / c;

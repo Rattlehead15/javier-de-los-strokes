@@ -1,4 +1,4 @@
-CC=gcc
+CC=clang
 CFLAGS=-std=c11 -Wall -Wextra -Wno-unused-parameter
 LDFLAGS=
 
