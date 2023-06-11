@@ -10,15 +10,15 @@ CCS = ["gcc", "clang", "icc", "icx"]
 DEFS = ""
 
 # common
-CFLAGS = "-g -Ofast -march=native -fopenmp"
+CFLAGS = "-g -Ofast -mavx2 -fopenmp"
 LDFLAGS = ""
 
 # exclusive
 EXC_CFLAGS = {
     "gcc": "-ftree-vectorize -fopt-info-vec",
     "clang": "-Rpass=loop-vectorize -Rpass-missed=loop-vectorize -Rpass-analysis=loop-vectorize",
-    # "icc": "-qopt-report-phase=vec",
-    # "icx": "-Rpass=loop-vectorize -Rpass-analysis=loop-vectorize",
+    "icc": "-qopt-report-phase=vec",
+    "icx": "-Rpass=loop-vectorize -Rpass-analysis=loop-vectorize",
 }
 
 EXC_LDFLAGS = {
