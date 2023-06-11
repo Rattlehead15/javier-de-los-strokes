@@ -2,5 +2,5 @@
 
 for size in {7..11} 
 do
-    ./headless $((2**$size)) >> $1
+    $1 $((2**$size)) >> $2
 done
