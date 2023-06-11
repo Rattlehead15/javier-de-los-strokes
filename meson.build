@@ -1,4 +1,4 @@
-project('tiny_ising', 'c',
+project('navier_stokes', 'c',
         default_options: [ 'c_std=c11', 'warning_level=2' ]
 )
 
