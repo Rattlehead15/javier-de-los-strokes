@@ -1,9 +1,9 @@
 #include <stddef.h>
 
-#include "solver.h"
 #include "indices.h"
+#include "solver.h"
 
-#define IX(i, j) (rb_idx((i),(j),(n+2)))
+#define IX(i, j) (rb_idx((i), (j), (n + 2)))
 #define SWAP(x0, x)      \
     {                    \
         float* tmp = x0; \
@@ -14,7 +14,8 @@
 typedef enum { NONE = 0,
                VERTICAL = 1,
                HORIZONTAL = 2 } boundary;
-typedef enum {RED, BLACK} grid_color;
+typedef enum { RED,
+               BLACK } grid_color;
 
 static void add_source(unsigned int n, float* x, const float* s, float dt)
 {
@@ -41,9 +42,9 @@ static void lin_solve_rb_step(grid_color color,
                               unsigned int n,
                               float a,
                               float c,
-                              const float * restrict same0,
-                              const float * restrict neigh,
-                              float * restrict same)
+                              const float* restrict same0,
+                              const float* restrict neigh,
+                              float* restrict same)
 {
     int shift = color == RED ? 1 : -1;
     unsigned int start = color == RED ? 0 : 1;
@@ -53,27 +54,24 @@ static void lin_solve_rb_step(grid_color color,
     for (unsigned int y = 1; y <= n; ++y, shift = -shift, start = 1 - start) {
         for (unsigned int x = start; x < width - (1 - start); ++x) {
             int index = idx(x, y, width);
-            same[index] = (same0[index] + a * (neigh[index - width] +
-                                               neigh[index] +
-                                               neigh[index + shift] +
-                                               neigh[index + width])) / c;
+            same[index] = (same0[index] + a * (neigh[index - width] + neigh[index] + neigh[index + shift] + neigh[index + width])) / c;
         }
     }
 }
 
 static void lin_solve(unsigned int n, boundary b,
-                      float * restrict x,
-                      const float * restrict x0,
+                      float* restrict x,
+                      const float* restrict x0,
                       float a, float c)
 {
     unsigned int color_size = (n + 2) * ((n + 2) / 2);
-    const float * red0 = x0;
-    const float * black0 = x0 + color_size;
-    float * red = x;
-    float * black = x + color_size;
+    const float* red0 = x0;
+    const float* black0 = x0 + color_size;
+    float* red = x;
+    float* black = x + color_size;
 
     for (unsigned int k = 0; k < 20; ++k) {
-        lin_solve_rb_step(RED,   n, a, c, red0, black, red);
+        lin_solve_rb_step(RED, n, a, c, red0, black, red);
         lin_solve_rb_step(BLACK, n, a, c, black0, red, black);
         set_bnd(n, b, x);
     }
@@ -119,7 +117,7 @@ static void advect(unsigned int n, boundary b, float* d, const float* d0, const 
     set_bnd(n, b, d);
 }
 
-static void project(unsigned int n, float* u, float* v, float* p, float* div)
+static void project(unsigned int n, float* u, float* v, float* restrict p, float* restrict div)
 {
     for (unsigned int i = 1; i <= n; i++) {
         for (unsigned int j = 1; j <= n; j++) {

@@ -7,9 +7,9 @@
 
    Description:
 
-	This code is a simple prototype that demonstrates how to use the
-	code provided in my GDC2003 paper entitles "Real-Time Fluid Dynamics
-	for Games". This code uses OpenGL and GLUT for graphics and interface
+        This code is a simple prototype that demonstrates how to use the
+        code provided in my GDC2003 paper entitles "Real-Time Fluid Dynamics
+        for Games". This code uses OpenGL and GLUT for graphics and interface
 
   =======================================================================
 */
@@ -17,12 +17,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "wtime.h"
 #include "indices.h"
+#include "wtime.h"
 
 /* macros */
 
-#define IX(i, j) (rb_idx((i),(j),(N+2)))
+#define IX(i, j) (rb_idx((i), (j), (N + 2)))
 
 /* external definitions (from solver.c) */
 
@@ -128,7 +128,7 @@ static void react(float* d, float* u, float* v)
     return;
 }
 
-static void one_step(void)
+static int one_step(void)
 {
     static int times = 1;
     static double start_t = 0.0;
@@ -150,7 +150,8 @@ static void one_step(void)
     dens_ns_p_cell += 1.0e9 * (wtime() - start_t) / (N * N);
 
     if (1.0 < wtime() - one_second) { /* at least 1s between stats */
-        printf("%lf, %lf, %lf, %lf: ns per cell total, react, vel_step, dens_step\n",
+        printf("%d, %lf, %lf, %lf, %lf\n",
+               N,
                (react_ns_p_cell + vel_ns_p_cell + dens_ns_p_cell) / times,
                react_ns_p_cell / times, vel_ns_p_cell / times, dens_ns_p_cell / times);
         one_second = wtime();
@@ -158,8 +159,10 @@ static void one_step(void)
         vel_ns_p_cell = 0.0;
         dens_ns_p_cell = 0.0;
         times = 1;
+        return 1;
     } else {
         times++;
+        return 0;
     }
 }
 
@@ -215,8 +218,12 @@ int main(int argc, char** argv)
         exit(1);
     }
     clear_data();
-    for (i = 0; i < 2048; i++) {
-        one_step();
+    printf("N,ns_per_cell,react,vel_step,dens_step\n");
+    int logs = 0;
+    for (i = 0; logs < 10; i++) {
+        logs += one_step();
+        if (logs >= 10)
+            break;
     }
     free_data();
 
