@@ -104,7 +104,7 @@ static void advect_rb_step(grid_color color,
         for (unsigned int xit = start; xit < width - (1 - start); ++xit) {
             int i = yit;
             int j = 1 - start  + 2 * xit;
-            int index = idx(yit, xit, width);
+            int index = idx(xit, yit, width);
             x = i - dt0 * u[index];
             y = j - dt0 * v[index];
             if (x < 0.5f) {
@@ -159,7 +159,7 @@ static void project_before_rb_step(grid_color color,
 
     for (unsigned int y = 1; y <= n; ++y, shift = -shift, start = 1 - start) {
         for (unsigned int x = start; x < width - (1 - start); ++x) {
-            int index = idx(y, x, width);
+            int index = idx(x, y, width);
             div[index] = -0.5f * (u[index + width] -
                                   u[index - width] +
                                   (shift * v[index + shift]) +
@@ -182,7 +182,7 @@ static void project_after_rb_step(grid_color color,
 
     for (unsigned int y = 1; y <= n; ++y, shift = -shift, start = 1 - start) {
         for (unsigned int x = start; x < width - (1 - start); ++x) {
-            int index = idx(y, x, width);
+            int index = idx(x, y, width);
             u[index] -= 0.5f * n * (p[index + width] - p[index - width]);
             v[index] -= 0.5f * n * ((shift * p[index + shift]) + (-shift * p[index]));
         }
